@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plugin-identity"
+version = "0.0.1"
+description = "Authenticate the calling agent via OAuth2/OIDC/SPIFFE and map it to a kernel actor. Identity in, actor out — the kernel still decides authority."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "PolyForm-Noncommercial-1.0.0" }
+authors = [{ name = "Ali Pourrahim" }]
+dependencies = ["decision-os-min", "cryptography>=42"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6", "mypy>=1.11"]
+
+[tool.setuptools]
+packages = ["dos_plugin_identity"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
