@@ -1,27 +1,40 @@
 # plugin-identity
 
-**Status: INTERFACE-ONLY** — a Decision OS plugin. Separate, private, and OPTIONAL: it
-is a *consumer* of `decision-os-min`, and the core is never modified by it.
+Identity-verification seam for the Decision OS / AuthGate stack.
 
-## What it plugs into
+**Status: interface-only (Protocol + demo stub).**
 
-Seam: **Identity verifier (OAuth/OIDC/SPIFFE)**.
+## What it does
 
-Authenticate the calling agent via OAuth2/OIDC/SPIFFE and map it to a kernel actor. Identity in, actor out — the kernel still decides authority.
+Defines the `IdentityVerifier` seam: turn a credential (bearer token, SPIFFE SVID,
+OIDC id_token) into a verified actor string the kernel understands. It answers
+"who is this?", never "may they?". A `StaticVerifier` (fixed credential→actor map)
+is included as a demo; real OIDC/SPIFFE verification replaces it.
 
-## Maturity, honestly
+## Authority
 
-- **REFERENCE** — a real, working implementation you can use/extend.
-- **INTERFACE-ONLY** — the plug-seam (Protocol) is defined + a demo/stub; the real
-  backend must be wired against actual infrastructure (HSM, OIDC, OPA, …).
-- **EXPERIMENTAL** — a modest, clearly-hedged helper; may never graduate.
-
-This one is **INTERFACE-ONLY**. It is promoted into the core ecosystem only if real
-usage or evidence proves its value — never merged into the kernel.
+This plugin holds **no authority**. Identity in, actor out — the kernel still
+decides authority for that actor.
 
 ## Install
 
 ```bash
-pip install -e .        # needs decision-os-min on the path
-pytest -q
+pip install "decision-os-min @ git+https://github.com/Aliipou/decision-os-min.git"
+pip install -e . --no-deps
+pytest -q          # AUTHGATE_BACKEND=python
 ```
+
+## Usage
+
+```python
+from dos_plugin_identity import StaticVerifier
+v = StaticVerifier({"tok-abc": "agent:bot"})
+v.actor_for("tok-abc")   # -> "agent:bot"
+v.actor_for("nope")      # -> None
+```
+
+## Status and limitations
+
+- **Interface only.** The shipped `StaticVerifier` is a demo, not real auth. A
+  production verifier must validate signatures/issuer/audience/expiry against a
+  real OIDC provider or SPIFFE trust domain — not implemented here.
