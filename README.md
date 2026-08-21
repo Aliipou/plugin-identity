@@ -1,5 +1,7 @@
 # plugin-identity
 
+**Live (graph):** [https://ali-plugin-identity.vercel.app](https://ali-plugin-identity.vercel.app)
+
 Identity-verification seam for the Decision OS / AuthGate stack.
 
 > Part of the Decision OS — governed by the Legitimacy ⊥ Authority pipeline
